@@ -1,44 +1,40 @@
 <script setup lang="ts">
-import type { EnterspeedContentPage } from '~/types/enterspeed';
+import type { EnterspeedContentPage } from "~/types/enterspeed";
 
 definePageMeta({
-  key: route => route.fullPath
-})
+  key: (route) => route.fullPath,
+});
 
-const default = resolveComponent('LazyViewsDefault');
+const defaultView = resolveComponent("LazyViewsDefault");
 
-const route = useRoute()
+const route = useRoute();
 
 const { data } = await useAsyncData(route.path, () => {
   return useEnterSpeed<EnterspeedContentPage>({
-    url: route.path
-  })
-})
+    url: route.path,
+  });
+});
 
 const viewTemplate = computed(() => {
-  let view = null
-  const type = data.value?.route?.type
+  let view = null;
+  const type = data.value?.route?.type;
 
   if (!type) {
-    return null
+    return null;
   }
 
   switch (type) {
-    case 'home':
-      view = home
-      break
+    case "home":
+      view = home;
+      break;
     default:
-      view = default
+      view = defaultView;
   }
 
-  return view
-})
+  return view;
+});
 </script>
 
 <template>
-  <Component
-    :is="viewTemplate"
-    v-if="viewTemplate"
-    :data="data?.route"
-  />
+  <Component :is="viewTemplate" v-if="viewTemplate" :data="data?.route" />
 </template>
